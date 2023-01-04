@@ -1,0 +1,122 @@
+{
+	"info": {
+		"_postman_id": "3c969c96-12a2-40c2-aa4c-a8eed65e9764",
+		"name": "airline system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "availability",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"if(response.length > 0){",
+							"    const firstKey = response[0].key;",
+							"    postman.setEnvironmentVariable(\"flightKey\", firstKey);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5134/availability",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5134",
+					"path": [
+						"availability"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "flight select",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if(responseHeaders){",
+							"    const sessionId = responseHeaders[\"x-booking-id\"];",
+							"    postman.setEnvironmentVariable(\"sessionId\", sessionId);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"key\": \"{{flightKey}}\",\n  \"name\": \"Diego\",\n  \"surname\": \"Tondim\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5134/flightselect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5134",
+					"path": [
+						"flightselect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "seats",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-booking-id",
+						"value": "{{sessionId}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5040/seats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5040",
+					"path": [
+						"seats"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
