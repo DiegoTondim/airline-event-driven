@@ -1,5 +1,8 @@
-﻿using Airline.Domain.Events;
+﻿using Airline.Booking.Models;
+using Airline.Domain.Events;
+using Airline.Domain.Resources;
 using Airline.Seats.Consumers;
+using Airline.Seats.Models;
 using Airline.Seats.Services;
 using MassTransit;
 using RabbitMQ.Client;
@@ -14,19 +17,28 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMassTransit(config => {
+builder.Services.AddMassTransit(config =>
+{
     config.AddConsumer<FlightSelectedConsumer>();
 
-    config.UsingRabbitMq((ctx, cfg) => {
-        cfg.Host("localhost", "/", h => {
-            h.Username("admin");
-            h.Password("admin");
+    config.SetKebabCaseEndpointNameFormatter();
+
+    config.UsingRabbitMq((ctx, cfg) =>
+    {
+        cfg.Host(new Uri(builder.Configuration["Messaging:Default:Endpoint"]), "general", h =>
+        {
+            h.Username(builder.Configuration["Messaging:Default:UserName"]);
+            h.Password(builder.Configuration["Messaging:Default:Password"]);
         });
-        cfg.ReceiveEndpoint("seats-cache", c => {
+
+        cfg.ReceiveEndpoint("seats-cache", c =>
+        {
             c.ConfigureConsumer<FlightSelectedConsumer>(ctx);
         });
     });
 });
+
+builder.Services.AddResources(builder.Configuration);
 
 var app = builder.Build();
 

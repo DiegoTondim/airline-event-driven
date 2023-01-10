@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3c969c96-12a2-40c2-aa4c-a8eed65e9764",
+		"_postman_id": "071b0f2b-3ac7-41c1-b1d3-922eb736f2e0",
 		"name": "airline system",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -113,6 +113,123 @@
 					"port": "5040",
 					"path": [
 						"seats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add item to basket",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-booking-id",
+						"value": "{{sessionId}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"code\": \"1C\",\r\n    \"type\": \"SEAT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5069/basket",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5069",
+					"path": [
+						"basket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "checkout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-booking-id",
+						"type": "default",
+						"value": "{{sessionId}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5069/checkout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5069",
+					"path": [
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pay order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-booking-id",
+						"type": "default",
+						"value": "{{sessionId}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5013/payment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5013",
+					"path": [
+						"payment"
 					]
 				}
 			},

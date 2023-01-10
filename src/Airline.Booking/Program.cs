@@ -1,24 +1,30 @@
-﻿using MassTransit;
-using MassTransit.Transports.Fabric;
+﻿using Airline.Domain.Resources;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMassTransit(config => {
-    config.UsingRabbitMq((ctx, cfg) => {
-        cfg.Host("localhost", "/", h => {
-            h.Username("admin");
-            h.Password("admin");
+
+builder.Services.AddMassTransit(config =>
+{
+    config.SetKebabCaseEndpointNameFormatter();
+
+    config.UsingRabbitMq((ctx, cfg) =>
+    {
+        cfg.Host(new Uri(builder.Configuration["Messaging:Default:Endpoint"]), "general", h =>
+        {
+            h.Username(builder.Configuration["Messaging:Default:UserName"]);
+            h.Password(builder.Configuration["Messaging:Default:Password"]);
         });
-        cfg.ExchangeType = ExchangeType.Direct.ToString();
     });
 });
+
+builder.Services.AddResources(builder.Configuration);
 
 var app = builder.Build();
 
